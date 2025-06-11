@@ -1,0 +1,67 @@
+/* style.css */
+/* Main page styling */
+.stApp {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Sidebar styling */
+.css-1d391kg {
+    background-color: #2e7bcf;
+    color: white;
+}
+
+/* Card styling */
+.card {
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1);
+    margin: 10px 0;
+    background-color: white;
+    transition: 0.3s;
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* Button styling */
+.stButton>button {
+    border-radius: 8px;
+    border: none;
+    background-color: #2e7bcf;
+    color: white;
+    padding: 10px 20px;
+    transition: 0.3s;
+}
+
+.stButton>button:hover {
+    background-color: #1a5a9a;
+    color: white;
+}
+
+/* Input field styling */
+.stTextInput>div>div>input, 
+.stNumberInput>div>div>input,
+.stSelectbox>div>div>select {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+}
+
+/* Tab styling */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 10px;
+}
+
+.stTabs [data-baseweb="tab"] {
+    border-radius: 8px 8px 0 0;
+    padding: 10px 20px;
+    background-color: #f1f1f1;
+    transition: 0.3s;
+}
+
+.stTabs [aria-selected="true"] {
+    background-color: #2e7bcf;
+    color: white;
+}
