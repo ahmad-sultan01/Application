@@ -4,95 +4,107 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import io
 
-# Set page config with better styling
+# Set dark theme config
 st.set_page_config(
-    page_title="Power Plant Performance Dashboard",
+    page_title="Power Plant Analytics",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS embedded directly in the Python file
-def set_css():
+# Apply dark theme
+def set_dark_theme():
     st.markdown("""
     <style>
         /* Main page styling */
         .stApp {
-            background-color: #f8f9fa;
-            color: #333;
+            background-color: #0E1117;
+            color: #FAFAFA;
         }
-
+        
+        /* Text color */
+        .css-1aumxhk, .css-1v0mbdj, .css-1q8dd3e, .css-1lcbmhc, .css-1outpf7 {
+            color: #FAFAFA !important;
+        }
+        
         /* Sidebar styling */
         [data-testid="stSidebar"] {
-            background-color: #2e7bcf;
-            color: white;
+            background-color: #1a1a1a !important;
+            border-right: 1px solid #333;
         }
-        [data-testid="stSidebar"] .st-cq {
-            color: white;
+        
+        /* Sidebar text */
+        [data-testid="stSidebar"] .css-1aumxhk {
+            color: #FAFAFA !important;
         }
-
-        /* Card styling */
-        .card {
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1);
-            margin: 10px 0;
-            background-color: white;
-            transition: 0.3s;
-        }
-        .card:hover {
-            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-        }
-
-        /* Button styling */
-        .stButton>button {
-            border-radius: 8px;
-            border: none;
-            background-color: #2e7bcf;
-            color: white;
-            padding: 10px 20px;
-            transition: 0.3s;
-        }
-        .stButton>button:hover {
-            background-color: #1a5a9a;
-            color: white;
-        }
-
-        /* Input field styling */
+        
+        /* Input fields */
         .stTextInput>div>div>input, 
         .stNumberInput>div>div>input,
         .stSelectbox>div>div>select {
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            padding: 8px 12px;
+            background-color: #1a1a1a !important;
+            color: white !important;
+            border-color: #333 !important;
         }
-
-        /* Tab styling */
-        .stTabs [data-baseweb="tab-list"] {
-            gap: 10px;
+        
+        /* Buttons */
+        .stButton>button {
+            background-color: #2e7bcf !important;
+            color: white !important;
+            border: none !important;
         }
+        
+        .stButton>button:hover {
+            background-color: #1a5a9a !important;
+        }
+        
+        /* Dataframe styling */
+        .dataframe {
+            background-color: #1a1a1a !important;
+            color: white !important;
+        }
+        
+        /* Tabs */
         .stTabs [data-baseweb="tab"] {
-            border-radius: 8px 8px 0 0;
-            padding: 10px 20px;
-            background-color: #f1f1f1;
-            transition: 0.3s;
+            background-color: #1a1a1a !important;
+            color: white !important;
+            border-color: #333 !important;
         }
+        
         .stTabs [aria-selected="true"] {
-            background-color: #2e7bcf;
-            color: white;
+            background-color: #2e7bcf !important;
+            color: white !important;
         }
-
+        
+        /* Cards */
+        .card {
+            background-color: #1a1a1a !important;
+            border: 1px solid #333 !important;
+            color: white !important;
+        }
+        
         /* Metric cards */
         .metric-card {
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            border-left: 5px solid;
+            background-color: #1a1a1a !important;
+            border-left: 5px solid !important;
+            color: white !important;
         }
+        
+        /* Plot background */
+        .stPlot {
+            background-color: #1a1a1a !important;
+        }
+        
+        /* Matplotlib dark theme */
+        plt.style.use('dark_background')
     </style>
     """, unsafe_allow_html=True)
+    
+    # Set matplotlib to dark mode
+    plt.style.use('dark_background')
+    sns.set_style("darkgrid")
 
-# Utility functions
+# Utility functions (unchanged from original)
 def calculate_metrics(coal_flow, gcv, steam_flow, h_steam, h_feed,
                       power_output, flue_temp, ambient_temp):
     """
@@ -174,10 +186,10 @@ def generate_recommendations(metrics):
     
     return rec
 
-# Main app with enhanced UI
+# Main app with dark theme
 def main():
-    # Apply CSS
-    set_css()
+    # Apply dark theme
+    set_dark_theme()
 
     # Sidebar navigation with icons
     st.sidebar.title("⚡ Power Plant Analytics")
@@ -194,7 +206,6 @@ def main():
     """)
 
     if page == "🏠 Home":
-        # Enhanced home page with cards
         st.title("⚡ Power Plant Performance Analytics")
         
         col1, col2, col3 = st.columns(3)
@@ -225,7 +236,6 @@ def main():
         
         st.markdown("---")
         
-        # Features section
         st.subheader("🔍 Key Features")
         features = [
             "✅ **Performance Metrics**: Calculate boiler efficiency, heat rate, and specific fuel consumption",
@@ -242,7 +252,6 @@ def main():
         st.info("💡 **Tip**: Use the navigation menu on the left to access different analysis tools.")
 
     elif page == "🧮 Single Audit":
-        # Enhanced single audit calculator
         st.title("🧮 Single Plant Audit Calculator")
         
         with st.expander("ℹ️ About this tool", expanded=False):
@@ -269,7 +278,7 @@ def main():
                 h_feed = st.number_input("Feedwater Enthalpy (kcal/kg)", min_value=0.0, value=100.0, step=10.0, format="%.2f")
                 ambient_temp = st.number_input("Ambient Temp (°C)", min_value=0.0, value=25.0, step=1.0, format="%.2f")
 
-            submitted = st.form_submit_button("🚀 Calculate Metrics", help="Click to calculate performance metrics")
+            submitted = st.form_submit_button("🚀 Calculate Metrics")
 
         if submitted:
             with st.spinner('Calculating metrics...'):
@@ -278,7 +287,6 @@ def main():
 
             st.success("✅ Calculation Complete!")
             
-            # Metrics display in cards
             st.subheader("📊 Key Performance Indicators")
             
             cols = st.columns(5)
@@ -299,15 +307,12 @@ def main():
                     </div>
                     """, unsafe_allow_html=True)
             
-            # Visualizations
             st.subheader("📈 Performance Visualizations")
             
-            # Main chart
             fig, ax = plt.subplots(figsize=(10, 6))
             palette = sns.color_palette("husl", len(results))
             bars = ax.bar(results.keys(), results.values(), color=palette)
             
-            # Add value labels
             for bar in bars:
                 height = bar.get_height()
                 ax.text(bar.get_x() + bar.get_width()/2., height,
@@ -321,7 +326,6 @@ def main():
             st.pyplot(fig)
             plt.close(fig)
             
-            # Recommendations with expandable sections
             st.subheader("💡 Optimization Recommendations")
             recommendations = generate_recommendations(results)
             
@@ -332,20 +336,14 @@ def main():
                     st.warning(rec)
                 elif "❌" in rec:
                     st.error(rec)
-                else:
-                    st.info(rec)
 
     elif page == "📂 Batch Analysis":
-        # Enhanced batch analysis
         st.title("📂 Batch Data Analysis")
-        st.markdown("""
-        Upload a CSV file containing plant operational data for comprehensive analysis.
-        The file should include all required parameters for accurate calculations.
-        """)
+        st.markdown("Upload a CSV file containing plant operational data for comprehensive analysis.")
         
         with st.expander("📋 Required CSV Format", expanded=False):
             st.markdown("""
-            Your CSV file must contain these columns (case sensitive):
+            Your CSV file must contain these columns:
             - `Coal Flow` (kg/hr)
             - `GCV` (kcal/kg)
             - `Steam Flow` (kg/hr)
@@ -356,8 +354,7 @@ def main():
             - `Ambient Temp` (°C)
             """)
         
-        uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"], 
-                                       help="Upload your plant operational data in CSV format")
+        uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
         
         required_columns = [
             "Coal Flow", "GCV", "Steam Flow", "Steam Enthalpy",
@@ -368,18 +365,15 @@ def main():
             try:
                 df = pd.read_csv(uploaded_file)
                 
-                # Data preview
                 st.subheader("📋 Data Preview")
-                st.dataframe(df.head().style.background_gradient(cmap='Blues'))
+                st.dataframe(df.head())
                 
-                # Validation
                 missing_cols = [col for col in required_columns if col not in df.columns]
                 if missing_cols:
                     st.error(f"❌ Missing required columns: {', '.join(missing_cols)}")
                     st.stop()
                 
                 with st.spinner("🔄 Processing data..."):
-                    # Data cleaning
                     for col in required_columns:
                         df[col] = pd.to_numeric(df[col], errors='coerce')
                     df.dropna(subset=required_columns, inplace=True)
@@ -388,7 +382,6 @@ def main():
                         st.warning("⚠️ No valid data rows remaining after cleaning.")
                         st.stop()
                     
-                    # Calculate metrics
                     results = []
                     for _, row in df.iterrows():
                         r = calculate_metrics(
@@ -401,14 +394,11 @@ def main():
                     result_df = pd.DataFrame(results)
                     final_df = pd.concat([df.reset_index(drop=True), result_df.reset_index(drop=True)], axis=1)
                 
-                # Results section
                 st.success(f"✅ Successfully processed {len(final_df)} records")
                 
-                # Summary statistics
                 st.subheader("📊 Summary Statistics")
-                st.dataframe(result_df.describe().style.background_gradient(cmap='YlOrBr'))
+                st.dataframe(result_df.describe())
                 
-                # Download button
                 st.download_button(
                     label="📥 Download Full Results",
                     data=final_df.to_csv(index=False),
@@ -416,7 +406,6 @@ def main():
                     mime="text/csv"
                 )
                 
-                # Visualizations
                 st.subheader("📈 Data Visualizations")
                 
                 tab1, tab2 = st.tabs(["Correlation Analysis", "Metrics Distribution"])
@@ -424,9 +413,7 @@ def main():
                 with tab1:
                     st.markdown("#### Correlation Heatmap")
                     fig, ax = plt.subplots(figsize=(10, 8))
-                    sns.heatmap(final_df.corr(numeric_only=True), ax=ax, annot=True, cmap="coolwarm", 
-                               center=0, linewidths=.5, annot_kws={"size": 9})
-                    plt.title("Feature Correlation Matrix", fontweight='bold')
+                    sns.heatmap(final_df.corr(numeric_only=True), ax=ax, annot=True, cmap="coolwarm")
                     st.pyplot(fig)
                     plt.close(fig)
                 
@@ -435,12 +422,10 @@ def main():
                     metric_to_plot = st.selectbox("Select metric to visualize", result_df.columns)
                     
                     fig, ax = plt.subplots(figsize=(10, 5))
-                    sns.histplot(data=final_df, x=metric_to_plot, kde=True, ax=ax, color="#4CAF50")
-                    plt.title(f"Distribution of {metric_to_plot}", fontweight='bold')
+                    sns.histplot(data=final_df, x=metric_to_plot, kde=True, ax=ax)
                     st.pyplot(fig)
                     plt.close(fig)
                 
-                # Recommendations
                 st.subheader("💡 Performance Recommendations")
                 avg_metrics = final_df[result_df.columns].mean().to_dict()
                 recommendations = generate_recommendations(avg_metrics)
@@ -452,27 +437,20 @@ def main():
                         st.warning(rec)
                     elif "❌" in rec:
                         st.error(rec)
-                    else:
-                        st.info(rec)
 
             except Exception as e:
                 st.error(f"❌ Error processing file: {str(e)}")
 
     elif page == "📊 Performance Dashboard":
-        # Enhanced performance dashboard
         st.title("📊 Plant Performance Dashboard")
-        st.markdown("""
-        Interactive dashboard for visualizing plant performance metrics and trends over time.
-        """)
+        st.markdown("Interactive dashboard for visualizing plant performance metrics and trends over time.")
         
-        uploaded_file = st.file_uploader("Upload Plant Data CSV", type=["csv"], 
-                                       help="Upload time-series data for visualization")
+        uploaded_file = st.file_uploader("Upload Plant Data CSV", type=["csv"])
         
         if uploaded_file:
             try:
                 df = pd.read_csv(uploaded_file)
                 
-                # Data validation and cleaning
                 numeric_cols = [
                     'Coal Flow', 'GCV', 'Steam Flow', 'Steam Enthalpy',
                     'Feedwater Enthalpy', 'Power Output', 'Flue Temp', 'Ambient Temp'
@@ -491,7 +469,6 @@ def main():
                     st.warning("⚠️ No valid data rows remaining after cleaning.")
                     st.stop()
                 
-                # Calculate metrics
                 with st.spinner("🔄 Calculating performance metrics..."):
                     calculated_metrics_df = df.apply(
                         lambda row: calculate_metrics(
@@ -511,25 +488,20 @@ def main():
                 
                 st.success(f"✅ Successfully processed {len(df_with_metrics)} records")
                 
-                # Dashboard layout
                 st.subheader("🔍 Data Overview")
-                st.dataframe(df_with_metrics.head().style.background_gradient(cmap='Blues'))
+                st.dataframe(df_with_metrics.head())
                 
-                # Time series selector
                 time_col_options = [col for col in df.columns if pd.api.types.is_datetime64_any_dtype(df[col])] + ["Index"]
                 time_col = st.selectbox("Select time column for trends", time_col_options)
                 
-                # Interactive visualizations
                 st.subheader("📈 Interactive Performance Charts")
                 
-                # Metric selector
                 metric_options = [col for col in calculated_metrics_df.columns if col not in numeric_cols]
                 selected_metrics = st.multiselect("Select metrics to visualize", 
                                                 metric_options,
                                                 default=metric_options[:3])
                 
                 if selected_metrics:
-                    # Create tabs for different chart types
                     tab1, tab2, tab3 = st.tabs(["Line Charts", "Scatter Plots", "Histograms"])
                     
                     with tab1:
@@ -566,12 +538,11 @@ def main():
                         for i, metric in enumerate(selected_metrics):
                             with cols[i % 2]:
                                 fig, ax = plt.subplots(figsize=(8, 4))
-                                sns.histplot(data=df_with_metrics, x=metric, kde=True, ax=ax, color="#4CAF50")
+                                sns.histplot(data=df_with_metrics, x=metric, kde=True, ax=ax)
                                 ax.set_title(f"{metric} Distribution", fontweight='bold')
                                 st.pyplot(fig)
                                 plt.close(fig)
                 
-                # KPI cards at the bottom
                 st.subheader("📊 Key Performance Indicators")
                 avg_metrics = df_with_metrics[metric_options].mean().to_dict()
                 
@@ -594,7 +565,6 @@ def main():
                         </div>
                         """, unsafe_allow_html=True)
                 
-                # Recommendations
                 st.subheader("💡 Performance Recommendations")
                 recommendations = generate_recommendations(avg_metrics)
                 
@@ -605,8 +575,6 @@ def main():
                         st.warning(rec)
                     elif "❌" in rec:
                         st.error(rec)
-                    else:
-                        st.info(rec)
 
             except Exception as e:
                 st.error(f"❌ Error processing file: {str(e)}")
