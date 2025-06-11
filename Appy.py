@@ -3,7 +3,6 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import io
-from PIL import Image
 
 # Set page config with better styling
 st.set_page_config(
@@ -13,15 +12,87 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for better styling
-def local_css(file_name):
-    with open(file_name) as f:
-        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+# Custom CSS embedded directly in the Python file
+def set_css():
+    st.markdown("""
+    <style>
+        /* Main page styling */
+        .stApp {
+            background-color: #f8f9fa;
+            color: #333;
+        }
 
-# Load custom CSS
-local_css("style.css")
+        /* Sidebar styling */
+        [data-testid="stSidebar"] {
+            background-color: #2e7bcf;
+            color: white;
+        }
+        [data-testid="stSidebar"] .st-cq {
+            color: white;
+        }
 
-# Utility functions (unchanged from your original)
+        /* Card styling */
+        .card {
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1);
+            margin: 10px 0;
+            background-color: white;
+            transition: 0.3s;
+        }
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+
+        /* Button styling */
+        .stButton>button {
+            border-radius: 8px;
+            border: none;
+            background-color: #2e7bcf;
+            color: white;
+            padding: 10px 20px;
+            transition: 0.3s;
+        }
+        .stButton>button:hover {
+            background-color: #1a5a9a;
+            color: white;
+        }
+
+        /* Input field styling */
+        .stTextInput>div>div>input, 
+        .stNumberInput>div>div>input,
+        .stSelectbox>div>div>select {
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+        }
+
+        /* Tab styling */
+        .stTabs [data-baseweb="tab-list"] {
+            gap: 10px;
+        }
+        .stTabs [data-baseweb="tab"] {
+            border-radius: 8px 8px 0 0;
+            padding: 10px 20px;
+            background-color: #f1f1f1;
+            transition: 0.3s;
+        }
+        .stTabs [aria-selected="true"] {
+            background-color: #2e7bcf;
+            color: white;
+        }
+
+        /* Metric cards */
+        .metric-card {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 5px solid;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+# Utility functions
 def calculate_metrics(coal_flow, gcv, steam_flow, h_steam, h_feed,
                       power_output, flue_temp, ambient_temp):
     """
@@ -105,18 +176,8 @@ def generate_recommendations(metrics):
 
 # Main app with enhanced UI
 def main():
-    # Custom sidebar styling
-    st.sidebar.markdown("""
-    <style>
-        .sidebar .sidebar-content {
-            background-image: linear-gradient(#2e7bcf,#2e7bcf);
-            color: white;
-        }
-        .sidebar .sidebar-content .block-container {
-            color: white;
-        }
-    </style>
-    """, unsafe_allow_html=True)
+    # Apply CSS
+    set_css()
 
     # Sidebar navigation with icons
     st.sidebar.title("⚡ Power Plant Analytics")
@@ -135,21 +196,7 @@ def main():
     if page == "🏠 Home":
         # Enhanced home page with cards
         st.title("⚡ Power Plant Performance Analytics")
-        st.markdown("""
-        <style>
-            .card {
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-                margin: 10px 0;
-                background-color: #f8f9fa;
-            }
-            .card:hover {
-                box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-            }
-        </style>
-        """, unsafe_allow_html=True)
-
+        
         col1, col2, col3 = st.columns(3)
         
         with col1:
@@ -197,13 +244,6 @@ def main():
     elif page == "🧮 Single Audit":
         # Enhanced single audit calculator
         st.title("🧮 Single Plant Audit Calculator")
-        st.markdown("""
-        <style>
-            .stNumberInput>div>div>input {
-                background-color: #f8f9fa;
-            }
-        </style>
-        """, unsafe_allow_html=True)
         
         with st.expander("ℹ️ About this tool", expanded=False):
             st.info("""
@@ -253,7 +293,7 @@ def main():
             for i, (metric, color, icon) in enumerate(metrics):
                 with cols[i]:
                     st.markdown(f"""
-                    <div style="padding: 10px; border-radius: 10px; background-color: {color}20; border-left: 5px solid {color}; margin-bottom: 10px;">
+                    <div class="metric-card" style="border-left-color: {color}; background-color: {color}20;">
                         <h4 style="margin: 0; color: {color}; font-size: 14px;">{icon} {metric}</h4>
                         <h2 style="margin: 0; color: {color};">{results[metric]:.2f}</h2>
                     </div>
@@ -315,7 +355,6 @@ def main():
             - `Flue Temp` (°C)
             - `Ambient Temp` (°C)
             """)
-            st.info("You can download a sample template [here](#) (link to be added).")
         
         uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"], 
                                        help="Upload your plant operational data in CSV format")
@@ -477,8 +516,8 @@ def main():
                 st.dataframe(df_with_metrics.head().style.background_gradient(cmap='Blues'))
                 
                 # Time series selector
-                time_col = st.selectbox("Select time column for trends", 
-                                      [col for col in df.columns if pd.api.types.is_datetime64_any_dtype(df[col])] + ["Index"])
+                time_col_options = [col for col in df.columns if pd.api.types.is_datetime64_any_dtype(df[col])] + ["Index"]
+                time_col = st.selectbox("Select time column for trends", time_col_options)
                 
                 # Interactive visualizations
                 st.subheader("📈 Interactive Performance Charts")
@@ -497,8 +536,10 @@ def main():
                         st.markdown("#### Trend Analysis")
                         fig, ax = plt.subplots(figsize=(12, 6))
                         for metric in selected_metrics:
-                            ax.plot(df_with_metrics[time_col] if time_col != "Index" else df_with_metrics.index, 
-                                   df_with_metrics[metric], label=metric)
+                            if time_col != "Index":
+                                ax.plot(df_with_metrics[time_col], df_with_metrics[metric], label=metric)
+                            else:
+                                ax.plot(df_with_metrics.index, df_with_metrics[metric], label=metric)
                         ax.set_title("Performance Metrics Over Time", fontweight='bold')
                         ax.set_ylabel("Value")
                         ax.legend()
@@ -546,8 +587,8 @@ def main():
                 for i, (metric, value) in enumerate(avg_metrics.items()):
                     with cols[i % 5]:
                         st.markdown(f"""
-                        <div style="padding: 15px; border-radius: 10px; background-color: {metric_colors.get(metric, '#FFFFFF')}20; 
-                                    border-left: 5px solid {metric_colors.get(metric, '#FFFFFF')}; margin-bottom: 10px;">
+                        <div class="metric-card" style="border-left-color: {metric_colors.get(metric, '#FFFFFF')}; 
+                                    background-color: {metric_colors.get(metric, '#FFFFFF')}20;">
                             <h4 style="margin: 0; color: {metric_colors.get(metric, '#FFFFFF')}; font-size: 14px;">{metric}</h4>
                             <h2 style="margin: 0; color: {metric_colors.get(metric, '#FFFFFF')};">{value:.2f}</h2>
                         </div>
