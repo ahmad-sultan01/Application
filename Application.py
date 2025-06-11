@@ -11,6 +11,169 @@ st.set_page_config(
     layout="wide"
 )
 
+# Add custom CSS for dark theme and Energy Sparks-like design
+st.markdown("""
+<style>
+:root {
+    --primary: #4CAF50;
+    --primary-dark: #2E7D32;
+    --secondary: #2196F3;
+    --background: #121212;
+    --surface: #1E1E1E;
+    --on-background: #E0E0E0;
+    --on-surface: #FFFFFF;
+    --error: #CF6679;
+}
+
+html, body, .stApp {
+    background-color: var(--background);
+    color: var(--on-background);
+}
+
+.stApp > header {
+    background-color: var(--surface) !important;
+    border-bottom: 2px solid var(--primary);
+}
+
+.stTitle {
+    color: var(--primary) !important;
+    font-weight: 700;
+}
+
+.stSidebar {
+    background-color: var(--surface) !important;
+    border-right: 1px solid #333;
+}
+
+.stSidebar .sidebar-content {
+    background-color: var(--surface) !important;
+}
+
+.stSidebar .sidebar-title {
+    color: var(--primary) !important;
+    font-weight: 600;
+}
+
+.stButton>button {
+    background-color: var(--primary) !important;
+    color: white !important;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.stButton>button:hover {
+    background-color: var(--primary-dark) !important;
+    transform: translateY(-1px);
+}
+
+.stTextInput>div>div>input, 
+.stNumberInput>div>div>input,
+.stSelectbox>div>div>select,
+.stTextArea>div>textarea {
+    background-color: #2d2d2d !important;
+    color: var(--on-background) !important;
+    border: 1px solid #444 !important;
+}
+
+.stDataFrame {
+    background-color: var(--surface) !important;
+    color: var(--on-surface) !important;
+    border: 1px solid #444;
+}
+
+.stContainer {
+    background-color: var(--surface) !important;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid #333;
+}
+
+.stRadio>div {
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stRadio>div>label {
+    background-color: var(--surface) !important;
+    color: var(--on-background) !important;
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: 1px solid #444;
+    transition: all 0.3s;
+}
+
+.stRadio>div>label:hover {
+    background-color: #333 !important;
+}
+
+.stRadio>div>label[data-baseweb="radio"]:first-child {
+    margin-top: 8px;
+}
+
+.stMarkdown strong {
+    color: var(--primary);
+}
+
+.stPlotlyChart, .stPyplot {
+    background-color: var(--surface) !important;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.custom-header {
+    background-color: var(--primary-dark);
+    color: white;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.stSuccess {
+    color: var(--primary) !important;
+}
+
+.stWarning {
+    color: #FFC107 !important;
+}
+
+.stError {
+    color: var(--error) !important;
+}
+
+[data-testid="stSidebarNav"] {
+    padding-top: 1rem;
+}
+
+[data-testid="stSidebarNav"] > ul {
+    gap: 0.5rem;
+}
+
+[data-testid="stSidebarNav"] li {
+    margin-bottom: 0.5rem;
+}
+
+svg {
+    background-color: var(--surface) !important;
+}
+
+.main .block-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .stSidebar {
+        width: 100% !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
 # Utility functions
 def calculate_metrics(coal_flow, gcv, steam_flow, h_steam, h_feed,
                       power_output, flue_temp, ambient_temp):
@@ -92,8 +255,7 @@ def generate_recommendations(metrics):
         rec.append("✅ **CO₂ Emissions (Avg: {:.2f} kg/hr)**: Monitor CO₂ emissions regularly.".format(co2))
     
     return rec
-# Add this line right before the main() function
-st.markdown('<style>' + open('style.css').read() + '</style>', unsafe_allow_html=True)
+
 # Main app
 def main():
     st.sidebar.title("Navigation")
