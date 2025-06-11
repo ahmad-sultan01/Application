@@ -92,7 +92,8 @@ def generate_recommendations(metrics):
         rec.append("✅ **CO₂ Emissions (Avg: {:.2f} kg/hr)**: Monitor CO₂ emissions regularly.".format(co2))
     
     return rec
-
+# Add this line right before the main() function
+st.markdown('<style>' + open('style.css').read() + '</style>', unsafe_allow_html=True)
 # Main app
 def main():
     st.sidebar.title("Navigation")
